@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	// Import viper
 	"github.com/spf13/viper"
 	// Import Postgres
+	_ "github.com/lib/pq"
 )
 
 var (
@@ -50,9 +52,10 @@ func getEnvVariable(key string) string {
 }
 
 func OpenConnection() *sql.DB {
+	portNumber, err := strconv.Atoi(port)
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+		host, portNumber, user, password, dbname)
 
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
